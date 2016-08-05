@@ -9,7 +9,7 @@ public class ServerPage {
 
 	public static void main(String[] args) throws IOException {
 		
-		ServerSocket server= new ServerSocket(0000);
+		ServerSocket server= new ServerSocket(2000);
 		Socket sk=server.accept();
 		InputStreamReader in=new InputStreamReader(sk.getInputStream());
 		BufferedReader cin = new BufferedReader(in);
