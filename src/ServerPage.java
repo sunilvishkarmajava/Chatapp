@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -9,34 +11,49 @@ public class ServerPage {
 
 	public static void main(String[] args) throws IOException {
 		
-		ServerSocket server= new ServerSocket(0000);
+		ServerSocket server= new ServerSocket(9090);
+		System.out.println("Server is ready...........");
 		Socket sk=server.accept();
-		InputStreamReader in=new InputStreamReader(sk.getInputStream());
-		BufferedReader cin = new BufferedReader(in);
-		PrintStream cout=new PrintStream(sk.getOutputStream());
+
+		//Reading form the keyboard 
 		BufferedReader stdin=new BufferedReader(new InputStreamReader(System.in));
-		String s;
+		//Sending the data from server
+		OutputStream ostream = sk.getOutputStream(); 
+		PrintWriter pwrite = new PrintWriter(ostream, true);
+
+		
+		//Receiving the data from server
+		BufferedReader receiveread=new BufferedReader(new InputStreamReader(sk.getInputStream()));
+
+		String receive, send;
 		while(true)
 		{
-			s=cin.readLine();
-			if(s.equalsIgnoreCase("bye"))
-			{
-				cout.println("BYE");
-				break;
-			}
-			else
-			{
-				System.out.println("Client:   "+s+"\n");
-				System.out.println("Server:   ");
-				s=stdin.readLine();
-			}
+
+			  receive = receiveread.readLine();//receive from server
+		      
+				  if(receive.equalsIgnoreCase("bye"))
+				  {
+					 System.out.println("Client is Going offline........bye");
+					 server.close();
+				     sk.close();
+					 
+		             
+				  }
+				  
+					  System.out.println("Client:" +receive+ "\n");// displaying at DOS prompt  
+					  send=stdin.readLine();
+					  pwrite.println(send);
+					  if(send.equalsIgnoreCase("bye"))
+						{
+							server.close();
+							sk.close();
+						}
+					  pwrite.flush();             
+			  	 
 		}
-		server.close();
-		sk.close();
-		in.close();
-		cin.close();
-		cout.close();
-		stdin.close();
+		//server.close();
+        //sk.close();
 	}
+	
 
 }
